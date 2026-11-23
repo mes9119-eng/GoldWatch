@@ -32,7 +32,7 @@ final class PriceFetcher {
         return ozUsd / GRAMS_PER_OZ * SAR_PER_USD * karat / 24.0;
     }
 
-    private static String get(String u) throws IOException {
+    static String get(String u) throws IOException {
         HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
         c.setConnectTimeout(15000);
         c.setReadTimeout(15000);

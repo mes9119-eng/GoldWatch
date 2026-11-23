@@ -133,6 +133,40 @@
             <Button android:id="@+id/refresh" style="@style/GoldBtn" android:text="تحديث الآن" />
         </LinearLayout>
 
+        <!-- chart -->
+        <LinearLayout style="@style/Card">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="📈 حركة السعر" android:textColor="@color/text"
+                android:textSize="18sp" android:textStyle="bold" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" android:orientation="horizontal">
+                <TextView android:id="@+id/tDay" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="34dp" android:layout_marginStart="3dp" android:layout_marginEnd="3dp"
+                    android:gravity="center" android:text="اليوم" android:textColor="@color/text"
+                    android:textSize="13sp" android:background="@drawable/tab_bg" />
+                <TextView android:id="@+id/tWeek" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="34dp" android:layout_marginStart="3dp" android:layout_marginEnd="3dp"
+                    android:gravity="center" android:text="أسبوع" android:textColor="@color/text"
+                    android:textSize="13sp" android:background="@drawable/tab_bg" />
+                <TextView android:id="@+id/tMonth" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="34dp" android:layout_marginStart="3dp" android:layout_marginEnd="3dp"
+                    android:gravity="center" android:text="شهر" android:textColor="@color/text"
+                    android:textSize="13sp" android:background="@drawable/tab_bg" />
+                <TextView android:id="@+id/tYear" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="34dp" android:layout_marginStart="3dp" android:layout_marginEnd="3dp"
+                    android:gravity="center" android:text="سنة" android:textColor="@color/text"
+                    android:textSize="13sp" android:background="@drawable/tab_bg" />
+            </LinearLayout>
+            <com.assiss.goldwatch.ChartView android:id="@+id/chart"
+                android:layout_width="match_parent" android:layout_height="210dp"
+                android:layout_marginTop="10dp" android:layoutDirection="ltr" />
+            <TextView android:id="@+id/chartInfo" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="6dp"
+                android:textColor="@color/muted" android:textSize="13sp" />
+            <TextView style="@style/Label" android:layout_marginTop="2dp" android:textSize="11sp"
+                android:text="اسحب إصبعك على الخط لعرض سعر أي نقطة" />
+        </LinearLayout>
+
         <!-- alerts -->
         <LinearLayout style="@style/Card">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"

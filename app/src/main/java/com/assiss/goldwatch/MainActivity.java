@@ -28,6 +28,10 @@ public class MainActivity extends Activity {
     private RadioGroup karats;
     private Button refreshBtn;
     private final Handler h = new Handler(Looper.getMainLooper());
+    private ChartView chart;
+    private TextView chartInfo;
+    private int chartRange = ChartData.DAY;
+    private int chartReq = 0;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -68,6 +72,7 @@ public class MainActivity extends Activity {
                 render();
                 renderAlert();
                 GoldWidget.updateAll(this);
+                loadChart();
             }
         });
         refreshBtn.setOnClickListener(v -> refresh());
@@ -108,6 +113,7 @@ public class MainActivity extends Activity {
             render();
             renderAlert();
             GoldWidget.updateAll(this);
+            loadChart();
             toast(m > 0 ? "تم الحفظ ✔" : "رجعنا للسعر العالمي");
         });
         findViewById(R.id.addWidget).setOnClickListener(v -> pinWidget());
@@ -131,6 +137,20 @@ public class MainActivity extends Activity {
         } catch (Exception ignored) {
         }
 
+        chart = findViewById(R.id.chart);
+        chartInfo = findViewById(R.id.chartInfo);
+        final int[] tabIds = {R.id.tDay, R.id.tWeek, R.id.tMonth, R.id.tYear};
+        for (int i = 0; i < tabIds.length; i++) {
+            final int range = i;
+            findViewById(tabIds[i]).setOnClickListener(v -> {
+                for (int id : tabIds) findViewById(id).setSelected(false);
+                v.setSelected(true);
+                chartRange = range;
+                loadChart();
+            });
+        }
+        findViewById(R.id.tDay).setSelected(true);
+
         render();
         renderAlert();
         refresh();
@@ -150,6 +170,7 @@ public class MainActivity extends Activity {
                 refreshBtn.setEnabled(true);
                 refreshBtn.setText("تحديث الآن");
                 render();
+                loadChart();
                 if (!ok) toast("تعذر جلب السعر، تأكد من الاتصال بالإنترنت");
             });
         }).start();
@@ -188,6 +209,42 @@ public class MainActivity extends Activity {
         double m = Store.margin(this);
         String marginTxt = m <= 0 ? "" : "  •  هامش البنك " + Updater.fmt(m) + "%";
         time.setText("الأونصة " + String.format(Locale.US, "%.2f", oz) + "$  •  آخر تحديث " + t + marginTxt);
+    }
+
+    private void loadChart() {
+        final int req = ++chartReq;
+        final int range = chartRange;
+        final int k = Store.karat(this);
+        final double live = Store.oz(this);
+        chart.setEmpty("جاري التحميل...");
+        chartInfo.setText("");
+        new Thread(() -> {
+            try {
+                ChartData.Series s = ChartData.load(range, live);
+                final long[] t = s.t;
+                final double[] g = new double[s.size()];
+                for (int i = 0; i < g.length; i++) g[i] = Store.gram(getApplicationContext(), s.oz[i], k);
+                h.post(() -> {
+                    if (req != chartReq) return;
+                    if (g.length < 2) {
+                        chart.setEmpty("لا توجد بيانات كافية لهذه الفترة");
+                        return;
+                    }
+                    chart.setData(t, g, range == ChartData.DAY);
+                    double diff = g[g.length - 1] - g[0];
+                    double pct = diff / g[0] * 100;
+                    String arrow = diff >= 0 ? "▲" : "▼";
+                    chartInfo.setText(arrow + " " + (diff >= 0 ? "+" : "") + Updater.fmt(diff) + " ريال  ("
+                            + (diff >= 0 ? "+" : "") + String.format(Locale.US, "%.2f", pct) + "%)  •  عيار " + k
+                            + "  •  " + Store.basisLabel(this));
+                    chartInfo.setTextColor(diff >= 0 ? 0xFF4CD964 : 0xFFFF5A5F);
+                });
+            } catch (Exception e) {
+                h.post(() -> {
+                    if (req == chartReq) chart.setEmpty("تعذر تحميل الرسم، تأكد من الإنترنت");
+                });
+            }
+        }).start();
     }
 
     private void renderAlert() {
