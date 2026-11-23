@@ -188,11 +188,11 @@
             </RadioGroup>
 
             <TextView style="@style/Label" android:layout_marginTop="10dp"
-                android:text="▲ نبهني إذا ارتفع فوق (ريال للجرام)" />
+                android:text="▲ للبيع: نبهني إذا سعر البيع للبنك ارتفع فوق" />
             <EditText android:id="@+id/up" style="@style/Input" android:hint="مثال: 390" />
 
             <TextView style="@style/Label" android:layout_marginTop="12dp"
-                android:text="▼ نبهني إذا نزل تحت (ريال للجرام)" />
+                android:text="▼ للشراء: نبهني إذا سعر الشراء من البنك نزل تحت" />
             <EditText android:id="@+id/low" style="@style/Input" android:hint="مثال: 370" />
 
             <Button android:id="@+id/save" style="@style/GoldBtn" android:text="حفظ التنبيه" />
@@ -210,15 +210,15 @@
                 android:text="🏦 سعر البنك" android:textColor="@color/text"
                 android:textSize="18sp" android:textStyle="bold" />
             <TextView style="@style/Label" android:layout_marginTop="8dp" android:lineSpacingExtra="3dp"
-                android:text="اكتب فرق البنك عن السعر العالمي (٪)، وتطلع لك أسعار البيع والشراء جنب السعر العالمي. واختر أي سعر يكون عليه التنبيه والرقم الكبير. خلها 0 للسعر العالمي بس." />
+                android:text="اكتب فرق البنك عن السعر العالمي (٪)، وتطلع لك أسعار البيع والشراء جنب السعر العالمي. تنبيه البيع يمشي على سعر البيع، وتنبيه الشراء على سعر الشراء. خلها 0 للسعر العالمي بس." />
             <RadioGroup android:id="@+id/marginMode"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" android:orientation="horizontal">
                 <RadioButton android:id="@+id/modeSell" android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" android:text="التنبيه على سعر البيع"
+                    android:layout_height="wrap_content" android:text="الرقم الكبير: البيع"
                     android:textColor="@color/text" android:buttonTint="@color/gold" />
                 <RadioButton android:id="@+id/modeBuy" android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" android:text="التنبيه على سعر الشراء"
+                    android:layout_height="wrap_content" android:text="الرقم الكبير: الشراء"
                     android:textColor="@color/text" android:buttonTint="@color/gold" />
             </RadioGroup>
             <EditText android:id="@+id/margin" style="@style/Input" android:hint="فرق البنك ٪ — الأهلي تقريباً 1" />

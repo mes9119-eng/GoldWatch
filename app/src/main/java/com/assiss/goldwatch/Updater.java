@@ -24,25 +24,29 @@ final class Updater {
     static void checkAlerts(Context c, double oz) {
         if (oz <= 0) return;
         int k = Store.karat(c);
-        double g = Store.gram(c, oz, k);
+        double gSell = Store.bankSell(c, oz, k); // what the bank pays you
+        double gBuy = Store.bankBuy(c, oz, k);   // what you pay the bank
+        boolean bank = Store.margin(c) > 0;
         double up = Store.upper(c);
         double low = Store.lower(c);
 
         if (up > 0) {
-            if (g >= up && !Store.fired(c, "upFired")) {
-                Notifier.show(c, 1, "📈 الذهب ارتفع",
-                        "عيار " + k + " وصل " + fmt(g) + " ريال للجرام (حدك " + fmt(up) + ")");
+            if (gSell >= up && !Store.fired(c, "upFired")) {
+                Notifier.show(c, 1, "📈 وقت البيع",
+                        (bank ? "سعر البيع للبنك" : "سعر") + " عيار " + k + " وصل " + fmt(gSell)
+                                + " ريال للجرام (حدك " + fmt(up) + ")");
                 Store.setFired(c, "upFired", true);
-            } else if (g < up * 0.998) {
+            } else if (gSell < up * 0.998) {
                 Store.setFired(c, "upFired", false); // re-arm after it drops back
             }
         }
         if (low > 0) {
-            if (g <= low && !Store.fired(c, "lowFired")) {
-                Notifier.show(c, 2, "📉 الذهب نزل",
-                        "عيار " + k + " نزل إلى " + fmt(g) + " ريال للجرام (حدك " + fmt(low) + ")");
+            if (gBuy <= low && !Store.fired(c, "lowFired")) {
+                Notifier.show(c, 2, "📉 وقت الشراء",
+                        (bank ? "سعر الشراء من البنك" : "سعر") + " عيار " + k + " نزل إلى " + fmt(gBuy)
+                                + " ريال للجرام (حدك " + fmt(low) + ")");
                 Store.setFired(c, "lowFired", true);
-            } else if (g > low * 1.002) {
+            } else if (gBuy > low * 1.002) {
                 Store.setFired(c, "lowFired", false);
             }
         }

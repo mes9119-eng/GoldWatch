@@ -66,8 +66,8 @@ public class GoldWidget extends AppWidgetProvider {
                 // highlight the price the alerts are based on
                 v.setTextColor(R.id.wSell, sell ? 0xFFF1D77A : 0xFFFF8A80);
                 v.setTextColor(R.id.wBuy, sell ? 0xFF80E0A0 : 0xFFF1D77A);
-                v.setTextViewText(R.id.wlSell, sell ? "بيع 🔔" : "بيع");
-                v.setTextViewText(R.id.wlBuy, sell ? "شراء" : "شراء 🔔");
+                v.setTextViewText(R.id.wlSell, Store.upper(c) > 0 ? "بيع 🔔" : "بيع");
+                v.setTextViewText(R.id.wlBuy, Store.lower(c) > 0 ? "شراء 🔔" : "شراء");
             }
             double open = Store.dayOpen(c);
             if (open > 0) {
@@ -82,9 +82,9 @@ public class GoldWidget extends AppWidgetProvider {
 
         double up = Store.upper(c), low = Store.lower(c);
         String alerts;
-        if (up > 0 && low > 0) alerts = "▲ " + fmt0(up) + "   ▼ " + fmt0(low);
-        else if (up > 0) alerts = "▲ " + fmt0(up);
-        else if (low > 0) alerts = "▼ " + fmt0(low);
+        if (up > 0 && low > 0) alerts = "بيع ▲ " + fmt0(up) + "   شراء ▼ " + fmt0(low);
+        else if (up > 0) alerts = "بيع ▲ " + fmt0(up);
+        else if (low > 0) alerts = "شراء ▼ " + fmt0(low);
         else alerts = "بدون تنبيه";
         v.setTextViewText(R.id.wAlerts, alerts);
 

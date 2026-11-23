@@ -253,10 +253,12 @@ public class MainActivity extends Activity {
             alertStatus.setText("لا يوجد تنبيه مفعّل");
             return;
         }
-        StringBuilder sb = new StringBuilder("مفعّل على عيار " + Store.karat(this)
-                + " (" + Store.basisLabel(this) + "):");
-        if (u > 0) sb.append("\n▲ إذا ارتفع فوق ").append(Updater.fmt(u)).append(" ريال");
-        if (l > 0) sb.append("\n▼ إذا نزل تحت ").append(Updater.fmt(l)).append(" ريال");
+        boolean bank = Store.margin(this) > 0;
+        StringBuilder sb = new StringBuilder("مفعّل على عيار " + Store.karat(this) + ":");
+        if (u > 0) sb.append("\n▲ بيع: إذا ").append(bank ? "سعر البيع للبنك" : "السعر")
+                .append(" ارتفع فوق ").append(Updater.fmt(u)).append(" ريال");
+        if (l > 0) sb.append("\n▼ شراء: إذا ").append(bank ? "سعر الشراء من البنك" : "السعر")
+                .append(" نزل تحت ").append(Updater.fmt(l)).append(" ريال");
         alertStatus.setText(sb.toString());
     }
 
