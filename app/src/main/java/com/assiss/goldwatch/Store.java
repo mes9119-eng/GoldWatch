@@ -59,6 +59,19 @@ final class Store {
         return PriceFetcher.gramSar(oz, karat) * (sellMode(c) ? 1 - m : 1 + m);
     }
 
+    static double bankSell(Context c, double oz, int k) {
+        return PriceFetcher.gramSar(oz, k) * (1 - margin(c) / 100.0);
+    }
+    static double bankBuy(Context c, double oz, int k) {
+        return PriceFetcher.gramSar(oz, k) * (1 + margin(c) / 100.0);
+    }
+
+    /** Short label for the price the alerts are based on. */
+    static String basisLabel(Context c) {
+        if (margin(c) <= 0) return "السعر العالمي";
+        return sellMode(c) ? "سعر البيع للبنك" : "سعر الشراء من البنك";
+    }
+
     // ---- alerts ----
     static int karat(Context c) { return p(c).getInt("karat", 24); }
     /** The two karats shown in small text, given the main one. */

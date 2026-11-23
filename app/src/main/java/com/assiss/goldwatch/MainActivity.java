@@ -106,8 +106,9 @@ public class MainActivity extends Activity {
             }
             Store.setMargin(this, m, modeGroup.getCheckedRadioButtonId() != R.id.modeBuy);
             render();
+            renderAlert();
             GoldWidget.updateAll(this);
-            toast(m > 0 ? "تم حفظ الهامش ✔" : "رجعنا للسعر العالمي");
+            toast(m > 0 ? "تم الحفظ ✔" : "رجعنا للسعر العالمي");
         });
         findViewById(R.id.addWidget).setOnClickListener(v -> pinWidget());
         findViewById(R.id.battery).setOnClickListener(v -> {
@@ -159,7 +160,17 @@ public class MainActivity extends Activity {
         if (oz <= 0) return;
         int k = Store.karat(this);
         int[] o = Store.others(k);
-        lMain.setText("عيار " + k);
+        double mg = Store.margin(this);
+        lMain.setText("عيار " + k + "  •  " + Store.basisLabel(this));
+        View bankRow = findViewById(R.id.bankRow);
+        if (mg > 0) {
+            bankRow.setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.pSell)).setText(Updater.fmt(Store.bankSell(this, oz, k)));
+            ((TextView) findViewById(R.id.pWorld)).setText(Updater.fmt(PriceFetcher.gramSar(oz, k)));
+            ((TextView) findViewById(R.id.pBuy)).setText(Updater.fmt(Store.bankBuy(this, oz, k)));
+        } else {
+            bankRow.setVisibility(View.GONE);
+        }
         pMain.setText(Updater.fmt(Store.gram(this, oz, k)));
         lA.setText("عيار " + o[0]);
         pA.setText(Updater.fmt(Store.gram(this, oz, o[0])));
@@ -175,9 +186,7 @@ public class MainActivity extends Activity {
         }
         String t = new SimpleDateFormat("HH:mm", Locale.US).format(new Date(Store.time(this)));
         double m = Store.margin(this);
-        String marginTxt = m <= 0 ? "  •  السعر العالمي"
-                : (Store.sellMode(this) ? "  •  سعر البيع للبنك (خصم " : "  •  سعر الشراء من البنك (هامش ")
-                + Updater.fmt(m) + "%)";
+        String marginTxt = m <= 0 ? "" : "  •  هامش البنك " + Updater.fmt(m) + "%";
         time.setText("الأونصة " + String.format(Locale.US, "%.2f", oz) + "$  •  آخر تحديث " + t + marginTxt);
     }
 
@@ -187,7 +196,8 @@ public class MainActivity extends Activity {
             alertStatus.setText("لا يوجد تنبيه مفعّل");
             return;
         }
-        StringBuilder sb = new StringBuilder("مفعّل على عيار " + Store.karat(this) + ":");
+        StringBuilder sb = new StringBuilder("مفعّل على عيار " + Store.karat(this)
+                + " (" + Store.basisLabel(this) + "):");
         if (u > 0) sb.append("\n▲ إذا ارتفع فوق ").append(Updater.fmt(u)).append(" ريال");
         if (l > 0) sb.append("\n▼ إذا نزل تحت ").append(Updater.fmt(l)).append(" ريال");
         alertStatus.setText(sb.toString());

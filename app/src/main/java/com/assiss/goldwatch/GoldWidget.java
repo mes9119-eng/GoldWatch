@@ -50,7 +50,9 @@ public class GoldWidget extends AppWidgetProvider {
     static RemoteViews build(Context c) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gold);
         int k = Store.karat(c);
-        v.setTextViewText(R.id.wlMain, "عيار " + k);
+        double mg = Store.margin(c);
+        v.setTextViewText(R.id.wlMain, mg <= 0 ? "عيار " + k
+                : (Store.sellMode(c) ? "بيع البنك ع" : "شراء البنك ع") + k);
         double oz = Store.oz(c);
         if (oz > 0) {
             v.setTextViewText(R.id.wMain, fmt2(Store.gram(c, oz, k)));

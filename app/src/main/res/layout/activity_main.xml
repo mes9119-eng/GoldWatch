@@ -80,6 +80,35 @@
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:textColor="@color/muted" android:textSize="13sp" />
 
+            <!-- world + bank prices side by side (shown when a bank margin is set) -->
+            <LinearLayout android:id="@+id/bankRow"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="14dp" android:orientation="horizontal"
+                android:background="@drawable/input_bg" android:padding="12dp"
+                android:visibility="gone">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                    <TextView style="@style/Label" android:text="بيع للبنك" android:textSize="11sp" />
+                    <TextView android:id="@+id/pSell" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textColor="#FF8A80" android:textSize="17sp" android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                    <TextView style="@style/Label" android:text="العالمي" android:textSize="11sp" />
+                    <TextView android:id="@+id/pWorld" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textColor="@color/text" android:textSize="17sp" android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                    <TextView style="@style/Label" android:text="شراء من البنك" android:textSize="11sp" />
+                    <TextView android:id="@+id/pBuy" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textColor="#80E0A0" android:textSize="17sp" android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" android:orientation="horizontal">
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
@@ -147,18 +176,18 @@
                 android:text="🏦 سعر البنك" android:textColor="@color/text"
                 android:textSize="18sp" android:textStyle="bold" />
             <TextView style="@style/Label" android:layout_marginTop="8dp" android:lineSpacingExtra="3dp"
-                android:text="اختر السعر اللي تبغى تراقبه، واكتب فرق البنك عن السعر العالمي بالنسبة. يتطبق على الأسعار والودجت والتنبيهات. خلها 0 للسعر العالمي." />
+                android:text="اكتب فرق البنك عن السعر العالمي (٪)، وتطلع لك أسعار البيع والشراء جنب السعر العالمي. واختر أي سعر يكون عليه التنبيه والرقم الكبير. خلها 0 للسعر العالمي بس." />
             <RadioGroup android:id="@+id/marginMode"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" android:orientation="horizontal">
                 <RadioButton android:id="@+id/modeSell" android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" android:text="لو بعت (خصم البنك)"
+                    android:layout_height="wrap_content" android:text="التنبيه على سعر البيع"
                     android:textColor="@color/text" android:buttonTint="@color/gold" />
                 <RadioButton android:id="@+id/modeBuy" android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" android:text="لو اشتريت (هامش البنك)"
+                    android:layout_height="wrap_content" android:text="التنبيه على سعر الشراء"
                     android:textColor="@color/text" android:buttonTint="@color/gold" />
             </RadioGroup>
-            <EditText android:id="@+id/margin" style="@style/Input" android:hint="النسبة ٪ — مثال: 1.2" />
+            <EditText android:id="@+id/margin" style="@style/Input" android:hint="فرق البنك ٪ — الأهلي تقريباً 1" />
             <Button android:id="@+id/saveMargin" style="@style/GoldBtn" android:text="حفظ" />
         </LinearLayout>
 
