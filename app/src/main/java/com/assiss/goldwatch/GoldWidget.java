@@ -51,11 +51,24 @@ public class GoldWidget extends AppWidgetProvider {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gold);
         int k = Store.karat(c);
         double mg = Store.margin(c);
-        v.setTextViewText(R.id.wlMain, mg <= 0 ? "عيار " + k
-                : (Store.sellMode(c) ? "بيع البنك ع" : "شراء البنك ع") + k);
+        v.setTextViewText(R.id.wlMain, "عيار " + k);
+        boolean triple = mg > 0;
+        v.setViewVisibility(R.id.wMain, triple ? android.view.View.GONE : android.view.View.VISIBLE);
+        v.setViewVisibility(R.id.wTriple, triple ? android.view.View.VISIBLE : android.view.View.GONE);
         double oz = Store.oz(c);
         if (oz > 0) {
             v.setTextViewText(R.id.wMain, fmt2(Store.gram(c, oz, k)));
+            if (triple) {
+                v.setTextViewText(R.id.wSell, fmt2(Store.bankSell(c, oz, k)));
+                v.setTextViewText(R.id.wWorld, fmt2(PriceFetcher.gramSar(oz, k)));
+                v.setTextViewText(R.id.wBuy, fmt2(Store.bankBuy(c, oz, k)));
+                boolean sell = Store.sellMode(c);
+                // highlight the price the alerts are based on
+                v.setTextColor(R.id.wSell, sell ? 0xFFF1D77A : 0xFFFF8A80);
+                v.setTextColor(R.id.wBuy, sell ? 0xFF80E0A0 : 0xFFF1D77A);
+                v.setTextViewText(R.id.wlSell, sell ? "بيع 🔔" : "بيع");
+                v.setTextViewText(R.id.wlBuy, sell ? "شراء" : "شراء 🔔");
+            }
             double open = Store.dayOpen(c);
             if (open > 0) {
                 double pct = (oz - open) / open * 100.0;

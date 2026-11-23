@@ -46,6 +46,39 @@
         android:includeFontPadding="false"
         android:maxLines="1" />
 
+    <LinearLayout
+        android:id="@+id/wTriple"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/wlSell" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="بيع" android:textColor="#8C8676" android:textSize="9sp" />
+            <TextView android:id="@+id/wSell" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="--" android:textColor="#F5F1E6" android:textStyle="bold" android:textSize="15sp"
+                android:includeFontPadding="false" android:maxLines="1" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/wlWorld" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="العالمي" android:textColor="#8C8676" android:textSize="9sp" />
+            <TextView android:id="@+id/wWorld" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="--" android:textColor="#F5F1E6" android:textStyle="bold" android:textSize="15sp"
+                android:includeFontPadding="false" android:maxLines="1" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/wlBuy" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="شراء" android:textColor="#8C8676" android:textSize="9sp" />
+            <TextView android:id="@+id/wBuy" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="--" android:textColor="#F5F1E6" android:textStyle="bold" android:textSize="15sp"
+                android:includeFontPadding="false" android:maxLines="1" />
+        </LinearLayout>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/wAlerts"
         android:layout_width="wrap_content"
