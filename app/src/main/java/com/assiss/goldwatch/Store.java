@@ -42,6 +42,19 @@ final class Store {
         e.commit();
     }
 
+    // ---- bank margin (% added on top of world spot price) ----
+    static double margin(Context c) { return d(c, "margin"); }
+    static void setMargin(Context c, double m) {
+        SharedPreferences.Editor e = p(c).edit();
+        putD(e, "margin", m);
+        e.commit();
+    }
+
+    /** Gram price in SAR for a karat, including the user's bank margin. */
+    static double gram(Context c, double oz, int karat) {
+        return PriceFetcher.gramSar(oz, karat) * (1 + margin(c) / 100.0);
+    }
+
     // ---- alerts ----
     static int karat(Context c) { return p(c).getInt("karat", 24); }
     /** The two karats shown in small text, given the main one. */

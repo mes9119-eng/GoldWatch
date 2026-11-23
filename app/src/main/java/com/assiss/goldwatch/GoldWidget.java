@@ -53,7 +53,7 @@ public class GoldWidget extends AppWidgetProvider {
         v.setTextViewText(R.id.wlMain, "عيار " + k);
         double oz = Store.oz(c);
         if (oz > 0) {
-            v.setTextViewText(R.id.wMain, fmt2(PriceFetcher.gramSar(oz, k)));
+            v.setTextViewText(R.id.wMain, fmt2(Store.gram(c, oz, k)));
             double open = Store.dayOpen(c);
             if (open > 0) {
                 double pct = (oz - open) / open * 100.0;

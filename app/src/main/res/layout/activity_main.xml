@@ -141,6 +141,17 @@
                 android:textSize="14sp" android:lineSpacingExtra="4dp" />
         </LinearLayout>
 
+        <!-- bank margin -->
+        <LinearLayout style="@style/Card">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🏦 هامش البنك" android:textColor="@color/text"
+                android:textSize="18sp" android:textStyle="bold" />
+            <TextView style="@style/Label" android:layout_marginTop="8dp" android:lineSpacingExtra="3dp"
+                android:text="النسبة اللي يضيفها البنك فوق السعر العالمي. تنحسب على الأسعار والودجت والتنبيهات. خلها فاضية أو 0 للسعر العالمي." />
+            <EditText android:id="@+id/margin" style="@style/Input" android:hint="مثال: 1.5 (٪)" />
+            <Button android:id="@+id/saveMargin" style="@style/GoldBtn" android:text="حفظ الهامش" />
+        </LinearLayout>
+
         <!-- setup -->
         <LinearLayout style="@style/Card">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"

@@ -90,9 +90,22 @@ public class MainActivity extends Activity {
             }
             double curOz = Store.oz(this);
             int curK = Store.karat(this);
-            String price = curOz > 0 ? Updater.fmt(PriceFetcher.gramSar(curOz, curK)) + " ريال" : "--";
+            String price = curOz > 0 ? Updater.fmt(Store.gram(this, curOz, curK)) + " ريال" : "--";
             Notifier.show(this, 3, "🔔 تنبيه تجريبي",
                     "هذا شكل وصوت تنبيه مراقب الذهب. سعر عيار " + curK + " الآن " + price);
+        });
+        final EditText marginIn = findViewById(R.id.margin);
+        if (Store.margin(this) > 0) marginIn.setText(Updater.fmt(Store.margin(this)));
+        findViewById(R.id.saveMargin).setOnClickListener(v -> {
+            double m = parse(marginIn.getText().toString());
+            if (m < 0 || m > 20) {
+                toast("اكتب نسبة بين 0 و 20");
+                return;
+            }
+            Store.setMargin(this, m);
+            render();
+            GoldWidget.updateAll(this);
+            toast(m > 0 ? "تم حفظ الهامش ✔" : "رجعنا للسعر العالمي");
         });
         findViewById(R.id.addWidget).setOnClickListener(v -> pinWidget());
         findViewById(R.id.battery).setOnClickListener(v -> {
@@ -145,11 +158,11 @@ public class MainActivity extends Activity {
         int k = Store.karat(this);
         int[] o = Store.others(k);
         lMain.setText("عيار " + k);
-        pMain.setText(Updater.fmt(PriceFetcher.gramSar(oz, k)));
+        pMain.setText(Updater.fmt(Store.gram(this, oz, k)));
         lA.setText("عيار " + o[0]);
-        pA.setText(Updater.fmt(PriceFetcher.gramSar(oz, o[0])));
+        pA.setText(Updater.fmt(Store.gram(this, oz, o[0])));
         lB.setText("عيار " + o[1]);
-        pB.setText(Updater.fmt(PriceFetcher.gramSar(oz, o[1])));
+        pB.setText(Updater.fmt(Store.gram(this, oz, o[1])));
         double open = Store.dayOpen(this);
         if (open > 0) {
             double pct = (oz - open) / open * 100.0;
@@ -159,7 +172,9 @@ public class MainActivity extends Activity {
             change.setTextColor(pct > 0.005 ? 0xFF4CD964 : (pct < -0.005 ? 0xFFFF5A5F : 0xFFBDBDBD));
         }
         String t = new SimpleDateFormat("HH:mm", Locale.US).format(new Date(Store.time(this)));
-        time.setText("الأونصة " + String.format(Locale.US, "%.2f", oz) + "$  •  آخر تحديث " + t);
+        double m = Store.margin(this);
+        String marginTxt = m > 0 ? "  •  شامل هامش البنك " + Updater.fmt(m) + "%" : "  •  السعر العالمي";
+        time.setText("الأونصة " + String.format(Locale.US, "%.2f", oz) + "$  •  آخر تحديث " + t + marginTxt);
     }
 
     private void renderAlert() {

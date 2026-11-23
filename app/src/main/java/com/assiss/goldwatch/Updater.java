@@ -24,7 +24,7 @@ final class Updater {
     static void checkAlerts(Context c, double oz) {
         if (oz <= 0) return;
         int k = Store.karat(c);
-        double g = PriceFetcher.gramSar(oz, k);
+        double g = Store.gram(c, oz, k);
         double up = Store.upper(c);
         double low = Store.lower(c);
 
