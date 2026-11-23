@@ -93,6 +93,7 @@
 
             <Button android:id="@+id/save" style="@style/GoldBtn" android:text="حفظ التنبيه" />
             <Button android:id="@+id/clear" style="@style/GhostBtn" android:text="إلغاء التنبيهات" />
+            <Button android:id="@+id/testAlert" style="@style/GhostBtn" android:text="🔔 جرّب التنبيه" />
             <TextView android:id="@+id/alertStatus"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_marginTop="12dp" android:textColor="@color/gold_light"

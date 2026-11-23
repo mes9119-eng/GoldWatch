@@ -79,6 +79,20 @@ public class MainActivity extends Activity {
             renderAlert();
             toast("تم إلغاء التنبيهات");
         });
+        findViewById(R.id.testAlert).setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= 33 &&
+                    checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                            != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+                toast("وافق على الإشعارات أولاً، وبعدها اضغط الزر مرة ثانية");
+                return;
+            }
+            double oz = Store.oz(this);
+            int k = Store.karat(this);
+            String price = oz > 0 ? Updater.fmt(PriceFetcher.gramSar(oz, k)) + " ريال" : "--";
+            Notifier.show(this, 3, "🔔 تنبيه تجريبي",
+                    "هذا شكل وصوت تنبيه مراقب الذهب. سعر عيار " + k + " الآن " + price);
+        });
         findViewById(R.id.addWidget).setOnClickListener(v -> pinWidget());
         findViewById(R.id.battery).setOnClickListener(v -> {
             try {
