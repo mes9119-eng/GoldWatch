@@ -66,8 +66,11 @@ public class GoldWidget extends AppWidgetProvider {
                 // highlight the price the alerts are based on
                 v.setTextColor(R.id.wSell, sell ? 0xFFF1D77A : 0xFFFF8A80);
                 v.setTextColor(R.id.wBuy, sell ? 0xFF80E0A0 : 0xFFF1D77A);
-                v.setTextViewText(R.id.wlSell, Store.upper(c) > 0 ? "بيع 🔔" : "بيع");
-                v.setTextViewText(R.id.wlBuy, Store.lower(c) > 0 ? "شراء 🔔" : "شراء");
+                // bell only when the price has actually reached the user's limit
+                boolean sellHit = Store.upper(c) > 0 && Store.bankSell(c, oz, k) >= Store.upper(c);
+                boolean buyHit = Store.lower(c) > 0 && Store.bankBuy(c, oz, k) <= Store.lower(c);
+                v.setTextViewText(R.id.wlSell, sellHit ? "بيع 🔔" : "بيع");
+                v.setTextViewText(R.id.wlBuy, buyHit ? "شراء 🔔" : "شراء");
             }
             double open = Store.dayOpen(c);
             if (open > 0) {
