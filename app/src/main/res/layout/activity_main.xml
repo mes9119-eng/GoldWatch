@@ -11,16 +11,57 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="مراقب الذهب"
-            android:textColor="@color/gold"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-        <TextView style="@style/Label"
-            android:text="سعر الجرام بالريال السعودي" />
+            android:orientation="horizontal"
+            android:gravity="top">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="مراقب الذهب"
+                    android:textColor="@color/gold"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+                <TextView style="@style/Label"
+                    android:text="سعر الجرام بالريال السعودي" />
+            </LinearLayout>
+
+            <!-- dedication badge (gift edition only) -->
+            <LinearLayout
+                android:id="@+id/dedication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/badge_bg"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="8dp"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✦ نسخة خاصة ✦"
+                    android:textColor="@color/muted"
+                    android:textSize="11sp" />
+                <TextView
+                    android:id="@+id/dedicationName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gold_light"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
 
         <!-- prices -->
         <LinearLayout

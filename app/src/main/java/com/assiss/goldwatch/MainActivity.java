@@ -103,6 +103,12 @@ public class MainActivity extends Activity {
             }
         });
 
+        String dedication = getString(R.string.dedication);
+        if (!dedication.isEmpty()) {
+            findViewById(R.id.dedication).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.dedicationName)).setText(dedication);
+        }
+
         try {
             String ver = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
             ((TextView) findViewById(R.id.version)).setText("مراقب الذهب • الإصدار " + ver);

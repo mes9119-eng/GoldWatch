@@ -18,9 +18,13 @@ jobs:
         with:
           gradle-version: '8.7'
       - run: gradle assembleDebug --no-daemon --stacktrace
-      - run: cp app/build/outputs/apk/debug/app-debug.apk GoldWatch.apk
+      - run: |
+          cp app/build/outputs/apk/standard/debug/app-standard-debug.apk GoldWatch.apk
+          cp app/build/outputs/apk/ali/debug/app-ali-debug.apk GoldWatch-Ali.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
           name: Gold Watch ${{ github.run_number }}
-          files: GoldWatch.apk
+          files: |
+            GoldWatch.apk
+            GoldWatch-Ali.apk
