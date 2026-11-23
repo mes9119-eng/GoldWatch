@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="مراقب الذهب"
+            android:textColor="@color/gold"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+        <TextView style="@style/Label"
+            android:text="سعر الجرام بالريال السعودي" />
+
+        <!-- prices -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="vertical"
+            android:background="@drawable/hero_bg"
+            android:padding="20dp">
+            <TextView style="@style/Label" android:text="عيار 21" />
+            <TextView android:id="@+id/p21"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="--" android:textColor="@color/gold_light"
+                android:textSize="44sp" android:textStyle="bold" />
+            <TextView android:id="@+id/change"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textColor="@color/muted" android:textSize="13sp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:orientation="horizontal">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView style="@style/Label" android:text="عيار 24" />
+                    <TextView android:id="@+id/p24" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textColor="@color/text" android:textSize="22sp" android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView style="@style/Label" android:text="عيار 18" />
+                    <TextView android:id="@+id/p18" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--"
+                        android:textColor="@color/text" android:textSize="22sp" android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView android:id="@+id/time"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:textColor="#7D786B" android:textSize="12sp" />
+            <Button android:id="@+id/refresh" style="@style/GoldBtn" android:text="تحديث الآن" />
+        </LinearLayout>
+
+        <!-- alerts -->
+        <LinearLayout style="@style/Card">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🔔 التنبيهات" android:textColor="@color/text"
+                android:textSize="18sp" android:textStyle="bold" />
+            <TextView style="@style/Label" android:layout_marginTop="10dp" android:text="العيار" />
+            <RadioGroup android:id="@+id/karats"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton android:id="@+id/k21" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content" android:text="21" android:textColor="@color/text"
+                    android:buttonTint="@color/gold" />
+                <RadioButton android:id="@+id/k24" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content" android:text="24" android:textColor="@color/text"
+                    android:buttonTint="@color/gold" />
+                <RadioButton android:id="@+id/k18" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content" android:text="18" android:textColor="@color/text"
+                    android:buttonTint="@color/gold" />
+            </RadioGroup>
+
+            <TextView style="@style/Label" android:layout_marginTop="10dp"
+                android:text="▲ نبهني إذا ارتفع فوق (ريال للجرام)" />
+            <EditText android:id="@+id/up" style="@style/Input" android:hint="مثال: 390" />
+
+            <TextView style="@style/Label" android:layout_marginTop="12dp"
+                android:text="▼ نبهني إذا نزل تحت (ريال للجرام)" />
+            <EditText android:id="@+id/low" style="@style/Input" android:hint="مثال: 370" />
+
+            <Button android:id="@+id/save" style="@style/GoldBtn" android:text="حفظ التنبيه" />
+            <Button android:id="@+id/clear" style="@style/GhostBtn" android:text="إلغاء التنبيهات" />
+            <TextView android:id="@+id/alertStatus"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:textColor="@color/gold_light"
+                android:textSize="14sp" android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+
+        <!-- setup -->
+        <LinearLayout style="@style/Card">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="الإعداد" android:textColor="@color/text"
+                android:textSize="18sp" android:textStyle="bold" />
+            <Button android:id="@+id/addWidget" style="@style/GoldBtn" android:text="أضف الودجت للشاشة" />
+            <Button android:id="@+id/battery" style="@style/GhostBtn" android:text="استثناء التطبيق من توفير البطارية" />
+            <TextView style="@style/Label" android:layout_marginTop="12dp" android:lineSpacingExtra="4dp"
+                android:text="• السعر يتحدث تلقائياً كل 15 دقيقة تقريباً (أقل مدة يسمح فيها أندرويد).\n• الأسعار عالمية محوّلة للريال على سعر 3.75، وقد تختلف عن أسعار المحلات بسبب المصنعية والضريبة.\n• استثناء التطبيق من توفير البطارية يضمن وصول التنبيهات في وقتها." />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

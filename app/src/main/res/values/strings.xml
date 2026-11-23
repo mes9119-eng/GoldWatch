@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">مراقب الذهب</string>
+    <string name="widget_name">مراقب الذهب</string>
+    <string name="widget_desc">أسعار جرام الذهب بالريال مع نسبة التغير</string>
+</resources>

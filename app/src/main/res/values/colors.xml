@@ -1,0 +1,9 @@
+<resources>
+    <color name="gold">#D4AF37</color>
+    <color name="gold_light">#F1D77A</color>
+    <color name="bg">#0F0E0B</color>
+    <color name="card">#1C1A14</color>
+    <color name="text">#F5F1E6</color>
+    <color name="muted">#A39E8F</color>
+    <color name="ic_bg">#16140F</color>
+</resources>
