@@ -10,7 +10,18 @@ android {
         versionCode 2
         versionName '1.1'
     }
-    buildTypes { release { minifyEnabled false } }
+    signingConfigs {
+        fixed {
+            storeFile file('goldwatch.keystore')
+            storePassword 'goldwatch123'
+            keyAlias 'goldwatch'
+            keyPassword 'goldwatch123'
+        }
+    }
+    buildTypes {
+        debug { signingConfig signingConfigs.fixed }
+        release { minifyEnabled false; signingConfig signingConfigs.fixed }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
