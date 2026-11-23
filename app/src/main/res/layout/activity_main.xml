@@ -30,8 +30,8 @@
             android:orientation="vertical"
             android:background="@drawable/hero_bg"
             android:padding="20dp">
-            <TextView style="@style/Label" android:text="عيار 21" />
-            <TextView android:id="@+id/p21"
+            <TextView android:id="@+id/lMain" style="@style/Label" android:text="عيار 24" />
+            <TextView android:id="@+id/pMain"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="--" android:textColor="@color/gold_light"
                 android:textSize="44sp" android:textStyle="bold" />
@@ -43,15 +43,15 @@
                 android:layout_marginTop="16dp" android:orientation="horizontal">
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" android:orientation="vertical">
-                    <TextView style="@style/Label" android:text="عيار 24" />
-                    <TextView android:id="@+id/p24" android:layout_width="wrap_content"
+                    <TextView android:id="@+id/lA" style="@style/Label" android:text="عيار 21" />
+                    <TextView android:id="@+id/pA" android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:text="--"
                         android:textColor="@color/text" android:textSize="22sp" android:textStyle="bold" />
                 </LinearLayout>
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" android:orientation="vertical">
-                    <TextView style="@style/Label" android:text="عيار 18" />
-                    <TextView android:id="@+id/p18" android:layout_width="wrap_content"
+                    <TextView android:id="@+id/lB" style="@style/Label" android:text="عيار 18" />
+                    <TextView android:id="@+id/pB" android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:text="--"
                         android:textColor="@color/text" android:textSize="22sp" android:textStyle="bold" />
                 </LinearLayout>
@@ -68,15 +68,15 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="🔔 التنبيهات" android:textColor="@color/text"
                 android:textSize="18sp" android:textStyle="bold" />
-            <TextView style="@style/Label" android:layout_marginTop="10dp" android:text="العيار" />
+            <TextView style="@style/Label" android:layout_marginTop="10dp" android:text="العيار (يظهر كبير في التطبيق والودجت)" />
             <RadioGroup android:id="@+id/karats"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <RadioButton android:id="@+id/k21" android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" android:text="21" android:textColor="@color/text"
-                    android:buttonTint="@color/gold" />
                 <RadioButton android:id="@+id/k24" android:layout_width="0dp" android:layout_weight="1"
                     android:layout_height="wrap_content" android:text="24" android:textColor="@color/text"
+                    android:buttonTint="@color/gold" />
+                <RadioButton android:id="@+id/k21" android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content" android:text="21" android:textColor="@color/text"
                     android:buttonTint="@color/gold" />
                 <RadioButton android:id="@+id/k18" android:layout_width="0dp" android:layout_weight="1"
                     android:layout_height="wrap_content" android:text="18" android:textColor="@color/text"

@@ -43,7 +43,13 @@ final class Store {
     }
 
     // ---- alerts ----
-    static int karat(Context c) { return p(c).getInt("karat", 21); }
+    static int karat(Context c) { return p(c).getInt("karat", 24); }
+    /** The two karats shown in small text, given the main one. */
+    static int[] others(int main) {
+        if (main == 24) return new int[]{21, 18};
+        if (main == 21) return new int[]{24, 18};
+        return new int[]{24, 21};
+    }
     static double upper(Context c) { return d(c, "upper"); }
     static double lower(Context c) { return d(c, "lower"); }
 

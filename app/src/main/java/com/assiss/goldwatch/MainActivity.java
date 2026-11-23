@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
-    private TextView p21, p24, p18, change, time, alertStatus;
+    private TextView pMain, pA, pB, lMain, lA, lB, change, time, alertStatus;
     private EditText up, low;
     private RadioGroup karats;
     private Button refreshBtn;
@@ -33,9 +33,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_main);
-        p21 = findViewById(R.id.p21);
-        p24 = findViewById(R.id.p24);
-        p18 = findViewById(R.id.p18);
+        pMain = findViewById(R.id.pMain);
+        pA = findViewById(R.id.pA);
+        pB = findViewById(R.id.pB);
+        lMain = findViewById(R.id.lMain);
+        lA = findViewById(R.id.lA);
+        lB = findViewById(R.id.lB);
         change = findViewById(R.id.change);
         time = findViewById(R.id.time);
         alertStatus = findViewById(R.id.alertStatus);
@@ -58,6 +61,15 @@ public class MainActivity extends Activity {
         if (Store.upper(this) > 0) up.setText(Updater.fmt(Store.upper(this)));
         if (Store.lower(this) > 0) low.setText(Updater.fmt(Store.lower(this)));
 
+        karats.setOnCheckedChangeListener((g, id) -> {
+            int nk = selectedKarat();
+            if (nk != Store.karat(this)) {
+                Store.saveAlerts(this, nk, Store.upper(this), Store.lower(this));
+                render();
+                renderAlert();
+                GoldWidget.updateAll(this);
+            }
+        });
         refreshBtn.setOnClickListener(v -> refresh());
         findViewById(R.id.save).setOnClickListener(v -> saveAlert());
         findViewById(R.id.clear).setOnClickListener(v -> {
@@ -103,9 +115,14 @@ public class MainActivity extends Activity {
     private void render() {
         double oz = Store.oz(this);
         if (oz <= 0) return;
-        p21.setText(Updater.fmt(PriceFetcher.gramSar(oz, 21)));
-        p24.setText(Updater.fmt(PriceFetcher.gramSar(oz, 24)));
-        p18.setText(Updater.fmt(PriceFetcher.gramSar(oz, 18)));
+        int k = Store.karat(this);
+        int[] o = Store.others(k);
+        lMain.setText("عيار " + k);
+        pMain.setText(Updater.fmt(PriceFetcher.gramSar(oz, k)));
+        lA.setText("عيار " + o[0]);
+        pA.setText(Updater.fmt(PriceFetcher.gramSar(oz, o[0])));
+        lB.setText("عيار " + o[1]);
+        pB.setText(Updater.fmt(PriceFetcher.gramSar(oz, o[1])));
         double open = Store.dayOpen(this);
         if (open > 0) {
             double pct = (oz - open) / open * 100.0;
@@ -143,6 +160,8 @@ public class MainActivity extends Activity {
         }
         Store.saveAlerts(this, selectedKarat(), u, l);
         renderAlert();
+        render();
+        GoldWidget.updateAll(this);
         toast("تم حفظ التنبيه ✔");
         final double oz = Store.oz(this);
         new Thread(() -> Updater.checkAlerts(getApplicationContext(), oz)).start();

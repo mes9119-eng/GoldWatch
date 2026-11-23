@@ -53,9 +53,14 @@ public class GoldWidget extends AppWidgetProvider {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gold);
         double oz = Store.oz(c);
         if (oz > 0) {
-            v.setTextViewText(R.id.w21, fmt0(PriceFetcher.gramSar(oz, 21)));
-            v.setTextViewText(R.id.w24, fmt0(PriceFetcher.gramSar(oz, 24)));
-            v.setTextViewText(R.id.w18, fmt0(PriceFetcher.gramSar(oz, 18)));
+            int k = Store.karat(c);
+            int[] o = Store.others(k);
+            v.setTextViewText(R.id.wlMain, "عيار " + k);
+            v.setTextViewText(R.id.wMain, fmt0(PriceFetcher.gramSar(oz, k)));
+            v.setTextViewText(R.id.wlA, "عيار " + o[0]);
+            v.setTextViewText(R.id.wA, fmt0(PriceFetcher.gramSar(oz, o[0])));
+            v.setTextViewText(R.id.wlB, "عيار " + o[1]);
+            v.setTextViewText(R.id.wB, fmt0(PriceFetcher.gramSar(oz, o[1])));
             double open = Store.dayOpen(c);
             if (open > 0) {
                 double pct = (oz - open) / open * 100.0;
