@@ -26,24 +26,35 @@ final class ChartData {
 
     private ChartData() {}
 
-    static Series load(int range, double liveOz) throws Exception {
+    static Series load(android.content.Context c, int range, double liveOz) throws Exception {
         List<long[]> tl = new ArrayList<>();
         List<Double> vl = new ArrayList<>();
         long now = System.currentTimeMillis();
 
         if (range == DAY) {
-            JSONObject o = new JSONObject(PriceFetcher.get(
-                    "https://xaus.com/api/v1/intraday?symbol=xau&hours=24"));
-            JSONArray a = o.getJSONArray("points");
-            for (int i = 0; i < a.length(); i++) {
-                JSONObject p = a.getJSONObject(i);
-                long t = p.getLong("t");
-                if (t < 100000000000L) t *= 1000L; // seconds -> millis
-                double v = p.getDouble("p");
-                if (v > 100) {
-                    tl.add(new long[]{t});
-                    vl.add(v);
+            long from = now - 24 * 3600 * 1000L;
+            java.util.TreeMap<Long, Double> pts = new java.util.TreeMap<>();
+            try {
+                JSONObject o = new JSONObject(PriceFetcher.get(
+                        "https://xaus.com/api/v1/intraday?symbol=xau&hours=24"));
+                JSONArray a = o.getJSONArray("points");
+                for (int i = 0; i < a.length(); i++) {
+                    JSONObject p = a.getJSONObject(i);
+                    long t = p.getLong("t");
+                    if (t < 100000000000L) t *= 1000L; // seconds -> millis
+                    double v = p.getDouble("p");
+                    if (v > 100 && t >= from && t <= now + 60000) pts.put(t, v);
                 }
+            } catch (Exception ignored) {
+                // fall back to our own readings only
+            }
+            for (double[] r : Store.log(c)) {
+                long t = (long) r[0];
+                if (t >= from && r[1] > 100) pts.put(t, r[1]);
+            }
+            for (java.util.Map.Entry<Long, Double> en : pts.entrySet()) {
+                tl.add(new long[]{en.getKey()});
+                vl.add(en.getValue());
             }
         } else {
             String json;

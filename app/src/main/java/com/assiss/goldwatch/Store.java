@@ -38,7 +38,21 @@ final class Store {
             putD(e, "dayOpen", oz);
         }
         putD(e, "oz", oz);
-        e.putLong("time", System.currentTimeMillis());
+        long now = System.currentTimeMillis();
+        e.putLong("time", now);
+        // keep our own log of readings for the last 48h: "t:oz;t:oz;..."
+        StringBuilder log = new StringBuilder();
+        for (String item : sp.getString("log", "").split(";")) {
+            int i = item.indexOf(':');
+            if (i <= 0) continue;
+            try {
+                long t = Long.parseLong(item.substring(0, i));
+                if (now - t < 48 * 3600 * 1000L) log.append(item).append(';');
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        log.append(now).append(':').append(oz).append(';');
+        e.putString("log", log.toString());
         e.commit();
     }
 
@@ -70,6 +84,21 @@ final class Store {
     static String basisLabel(Context c) {
         if (margin(c) <= 0) return "السعر العالمي";
         return sellMode(c) ? "سعر البيع للبنك" : "سعر الشراء من البنك";
+    }
+
+    /** Own recorded readings as {epochMillis, usdPerOz} pairs. */
+    static java.util.List<double[]> log(Context c) {
+        java.util.List<double[]> out = new java.util.ArrayList<>();
+        for (String item : p(c).getString("log", "").split(";")) {
+            int i = item.indexOf(':');
+            if (i <= 0) continue;
+            try {
+                out.add(new double[]{Long.parseLong(item.substring(0, i)),
+                        Double.parseDouble(item.substring(i + 1))});
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return out;
     }
 
     // ---- alerts ----

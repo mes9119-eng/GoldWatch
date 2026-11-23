@@ -220,7 +220,7 @@ public class MainActivity extends Activity {
         chartInfo.setText("");
         new Thread(() -> {
             try {
-                ChartData.Series s = ChartData.load(range, live);
+                ChartData.Series s = ChartData.load(getApplicationContext(), range, live);
                 final long[] t = s.t;
                 final double[] g = new double[s.size()];
                 for (int i = 0; i < g.length; i++) g[i] = Store.gram(getApplicationContext(), s.oz[i], k);
