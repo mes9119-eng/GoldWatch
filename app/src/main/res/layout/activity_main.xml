@@ -110,5 +110,40 @@
             <TextView style="@style/Label" android:layout_marginTop="12dp" android:lineSpacingExtra="4dp"
                 android:text="• السعر يتحدث تلقائياً كل 15 دقيقة تقريباً (أقل مدة يسمح فيها أندرويد).\n• الأسعار عالمية محوّلة للريال على سعر 3.75، وقد تختلف عن أسعار المحلات بسبب المصنعية والضريبة.\n• استثناء التطبيق من توفير البطارية يضمن وصول التنبيهات في وقتها." />
         </LinearLayout>
+
+        <!-- signature -->
+        <View
+            android:layout_width="48dp"
+            android:layout_height="2dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="28dp"
+            android:background="@color/gold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:text="تصميم وتطوير"
+            android:textColor="@color/muted"
+            android:textSize="12sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="2dp"
+            android:text="مسفر القحطاني"
+            android:textColor="@color/gold"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="#5E5A4F"
+            android:textSize="11sp" />
     </LinearLayout>
 </ScrollView>

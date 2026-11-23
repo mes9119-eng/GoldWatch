@@ -87,11 +87,11 @@ public class MainActivity extends Activity {
                 toast("وافق على الإشعارات أولاً، وبعدها اضغط الزر مرة ثانية");
                 return;
             }
-            double oz = Store.oz(this);
-            int k = Store.karat(this);
-            String price = oz > 0 ? Updater.fmt(PriceFetcher.gramSar(oz, k)) + " ريال" : "--";
+            double curOz = Store.oz(this);
+            int curK = Store.karat(this);
+            String price = curOz > 0 ? Updater.fmt(PriceFetcher.gramSar(curOz, curK)) + " ريال" : "--";
             Notifier.show(this, 3, "🔔 تنبيه تجريبي",
-                    "هذا شكل وصوت تنبيه مراقب الذهب. سعر عيار " + k + " الآن " + price);
+                    "هذا شكل وصوت تنبيه مراقب الذهب. سعر عيار " + curK + " الآن " + price);
         });
         findViewById(R.id.addWidget).setOnClickListener(v -> pinWidget());
         findViewById(R.id.battery).setOnClickListener(v -> {
@@ -101,6 +101,12 @@ public class MainActivity extends Activity {
                 toast("افتح إعدادات البطارية يدوياً");
             }
         });
+
+        try {
+            String ver = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            ((TextView) findViewById(R.id.version)).setText("مراقب الذهب • الإصدار " + ver);
+        } catch (Exception ignored) {
+        }
 
         render();
         renderAlert();
