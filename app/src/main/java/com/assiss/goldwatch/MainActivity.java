@@ -95,14 +95,16 @@ public class MainActivity extends Activity {
                     "هذا شكل وصوت تنبيه مراقب الذهب. سعر عيار " + curK + " الآن " + price);
         });
         final EditText marginIn = findViewById(R.id.margin);
+        final RadioGroup modeGroup = findViewById(R.id.marginMode);
         if (Store.margin(this) > 0) marginIn.setText(Updater.fmt(Store.margin(this)));
+        modeGroup.check(Store.sellMode(this) ? R.id.modeSell : R.id.modeBuy);
         findViewById(R.id.saveMargin).setOnClickListener(v -> {
             double m = parse(marginIn.getText().toString());
             if (m < 0 || m > 20) {
                 toast("اكتب نسبة بين 0 و 20");
                 return;
             }
-            Store.setMargin(this, m);
+            Store.setMargin(this, m, modeGroup.getCheckedRadioButtonId() != R.id.modeBuy);
             render();
             GoldWidget.updateAll(this);
             toast(m > 0 ? "تم حفظ الهامش ✔" : "رجعنا للسعر العالمي");
@@ -173,7 +175,9 @@ public class MainActivity extends Activity {
         }
         String t = new SimpleDateFormat("HH:mm", Locale.US).format(new Date(Store.time(this)));
         double m = Store.margin(this);
-        String marginTxt = m > 0 ? "  •  شامل هامش البنك " + Updater.fmt(m) + "%" : "  •  السعر العالمي";
+        String marginTxt = m <= 0 ? "  •  السعر العالمي"
+                : (Store.sellMode(this) ? "  •  سعر البيع للبنك (خصم " : "  •  سعر الشراء من البنك (هامش ")
+                + Updater.fmt(m) + "%)";
         time.setText("الأونصة " + String.format(Locale.US, "%.2f", oz) + "$  •  آخر تحديث " + t + marginTxt);
     }
 

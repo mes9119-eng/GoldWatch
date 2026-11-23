@@ -44,15 +44,19 @@ final class Store {
 
     // ---- bank margin (% added on top of world spot price) ----
     static double margin(Context c) { return d(c, "margin"); }
-    static void setMargin(Context c, double m) {
+    /** true = watch the bank's SELL (buy-back) price, false = its BUY price. */
+    static boolean sellMode(Context c) { return p(c).getBoolean("sellMode", true); }
+    static void setMargin(Context c, double m, boolean sell) {
         SharedPreferences.Editor e = p(c).edit();
         putD(e, "margin", m);
+        e.putBoolean("sellMode", sell);
         e.commit();
     }
 
     /** Gram price in SAR for a karat, including the user's bank margin. */
     static double gram(Context c, double oz, int karat) {
-        return PriceFetcher.gramSar(oz, karat) * (1 + margin(c) / 100.0);
+        double m = margin(c) / 100.0;
+        return PriceFetcher.gramSar(oz, karat) * (sellMode(c) ? 1 - m : 1 + m);
     }
 
     // ---- alerts ----
