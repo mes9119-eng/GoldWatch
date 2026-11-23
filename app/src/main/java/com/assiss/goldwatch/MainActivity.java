@@ -77,6 +77,7 @@ public class MainActivity extends Activity {
             low.setText("");
             Store.saveAlerts(this, selectedKarat(), 0, 0);
             renderAlert();
+            GoldWidget.updateAll(this);
             toast("تم إلغاء التنبيهات");
         });
         findViewById(R.id.testAlert).setOnClickListener(v -> {

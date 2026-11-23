@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public class GoldWidget extends AppWidgetProvider {
@@ -51,42 +49,44 @@ public class GoldWidget extends AppWidgetProvider {
 
     static RemoteViews build(Context c) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gold);
+        int k = Store.karat(c);
+        v.setTextViewText(R.id.wlMain, "عيار " + k);
         double oz = Store.oz(c);
         if (oz > 0) {
-            int k = Store.karat(c);
-            int[] o = Store.others(k);
-            v.setTextViewText(R.id.wlMain, "عيار " + k);
-            v.setTextViewText(R.id.wMain, fmt0(PriceFetcher.gramSar(oz, k)));
-            v.setTextViewText(R.id.wlA, "عيار " + o[0]);
-            v.setTextViewText(R.id.wA, fmt0(PriceFetcher.gramSar(oz, o[0])));
-            v.setTextViewText(R.id.wlB, "عيار " + o[1]);
-            v.setTextViewText(R.id.wB, fmt0(PriceFetcher.gramSar(oz, o[1])));
+            v.setTextViewText(R.id.wMain, fmt2(PriceFetcher.gramSar(oz, k)));
             double open = Store.dayOpen(c);
             if (open > 0) {
                 double pct = (oz - open) / open * 100.0;
                 String arrow = pct > 0.005 ? "▲" : (pct < -0.005 ? "▼" : "●");
                 int color = pct > 0.005 ? 0xFF4CD964 : (pct < -0.005 ? 0xFFFF5A5F : 0xFFBDBDBD);
                 v.setTextViewText(R.id.wChange,
-                        arrow + " " + String.format(Locale.US, "%.2f%%", Math.abs(pct)));
+                        arrow + String.format(Locale.US, "%.2f%%", Math.abs(pct)));
                 v.setTextColor(R.id.wChange, color);
             }
-            String t = new SimpleDateFormat("HH:mm", Locale.US).format(new Date(Store.time(c)));
-            v.setTextViewText(R.id.wTime, "آخر تحديث " + t);
         }
 
-        PendingIntent open = PendingIntent.getActivity(c, 0,
+        double up = Store.upper(c), low = Store.lower(c);
+        String alerts;
+        if (up > 0 && low > 0) alerts = "▲ " + fmt0(up) + "   ▼ " + fmt0(low);
+        else if (up > 0) alerts = "▲ " + fmt0(up);
+        else if (low > 0) alerts = "▼ " + fmt0(low);
+        else alerts = "بدون تنبيه";
+        v.setTextViewText(R.id.wAlerts, alerts);
+
+        // tap opens the app (which also refreshes the price)
+        PendingIntent openApp = PendingIntent.getActivity(c, 0,
                 new Intent(c, MainActivity.class),
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        v.setOnClickPendingIntent(R.id.wRoot, open);
-
-        Intent r = new Intent(c, GoldWidget.class).setAction(ACTION_REFRESH);
-        PendingIntent refresh = PendingIntent.getBroadcast(c, 1, r,
-                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        v.setOnClickPendingIntent(R.id.wRefresh, refresh);
+        v.setOnClickPendingIntent(R.id.wRoot, openApp);
         return v;
     }
 
+    static String fmt2(double v) {
+        return String.format(Locale.US, "%.2f", v);
+    }
+
     static String fmt0(double v) {
-        return String.format(Locale.US, "%.1f", v);
+        return v == Math.floor(v) ? String.format(Locale.US, "%.0f", v)
+                : String.format(Locale.US, "%.1f", v);
     }
 }
