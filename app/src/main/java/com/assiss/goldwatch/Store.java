@@ -101,6 +101,10 @@ final class Store {
         return out;
     }
 
+    /** Widget background opacity 0..255. */
+    static int widgetAlpha(Context c) { return p(c).getInt("wAlpha", 242); }
+    static void setWidgetAlpha(Context c, int a) { p(c).edit().putInt("wAlpha", a).commit(); }
+
     // ---- alerts ----
     static int karat(Context c) { return p(c).getInt("karat", 24); }
     /** The two karats shown in small text, given the main one. */

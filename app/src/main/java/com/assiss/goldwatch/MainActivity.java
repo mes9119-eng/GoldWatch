@@ -116,6 +116,28 @@ public class MainActivity extends Activity {
             loadChart();
             toast(m > 0 ? "تم الحفظ ✔" : "رجعنا للسعر العالمي");
         });
+        final TextView alphaValue = findViewById(R.id.alphaValue);
+        final android.widget.SeekBar alphaBar = findViewById(R.id.alphaBar);
+        // progress = transparency % (0 = opaque, 100 = fully transparent)
+        int transp = Math.round((255 - Store.widgetAlpha(this)) * 100f / 255f);
+        alphaBar.setProgress(transp);
+        alphaValue.setText(transp + "%");
+        alphaBar.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(android.widget.SeekBar sb, int progress, boolean fromUser) {
+                alphaValue.setText(progress + "%");
+                if (fromUser) {
+                    Store.setWidgetAlpha(MainActivity.this, Math.round(255 - progress * 255f / 100f));
+                    GoldWidget.updateAll(MainActivity.this);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(android.widget.SeekBar sb) {}
+
+            @Override
+            public void onStopTrackingTouch(android.widget.SeekBar sb) {}
+        });
         findViewById(R.id.addWidget).setOnClickListener(v -> pinWidget());
         findViewById(R.id.battery).setOnClickListener(v -> {
             try {

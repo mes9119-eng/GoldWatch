@@ -231,6 +231,24 @@
                 android:text="الإعداد" android:textColor="@color/text"
                 android:textSize="18sp" android:textStyle="bold" />
             <Button android:id="@+id/addWidget" style="@style/GoldBtn" android:text="أضف الودجت للشاشة" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:orientation="horizontal">
+                <TextView style="@style/Label" android:layout_width="0dp" android:layout_weight="1"
+                    android:text="شفافية خلفية الودجت" />
+                <TextView android:id="@+id/alphaValue" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="@color/gold_light"
+                    android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <SeekBar android:id="@+id/alphaBar" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="6dp"
+                android:max="100" android:progressTint="@color/gold"
+                android:thumbTint="@color/gold_light" android:progressBackgroundTint="#55D4AF37" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView style="@style/Label" android:layout_width="0dp" android:layout_weight="1"
+                    android:textSize="11sp" android:text="معتم" />
+                <TextView style="@style/Label" android:textSize="11sp" android:text="شفاف" />
+            </LinearLayout>
             <Button android:id="@+id/battery" style="@style/GhostBtn" android:text="استثناء التطبيق من توفير البطارية" />
             <TextView style="@style/Label" android:layout_marginTop="12dp" android:lineSpacingExtra="4dp"
                 android:text="• السعر يتحدث تلقائياً كل 15 دقيقة تقريباً (أقل مدة يسمح فيها أندرويد).\n• الأسعار عالمية محوّلة للريال على سعر 3.75، وقد تختلف عن أسعار المحلات بسبب المصنعية والضريبة.\n• استثناء التطبيق من توفير البطارية يضمن وصول التنبيهات في وقتها." />

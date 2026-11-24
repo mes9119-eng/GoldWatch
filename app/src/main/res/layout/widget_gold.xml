@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <ImageView
+      android:id="@+id/wBg"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="fitXY"
+      android:src="@drawable/widget_bg"
+      android:contentDescription="@null" />
+
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/widget_bg"
     android:layoutDirection="rtl"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
@@ -88,3 +99,4 @@
         android:textSize="10sp"
         android:maxLines="1" />
 </LinearLayout>
+</FrameLayout>

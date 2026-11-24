@@ -49,6 +49,7 @@ public class GoldWidget extends AppWidgetProvider {
 
     static RemoteViews build(Context c) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gold);
+        v.setInt(R.id.wBg, "setImageAlpha", Store.widgetAlpha(c));
         int k = Store.karat(c);
         double mg = Store.margin(c);
         v.setTextViewText(R.id.wlMain, "عيار " + k);
