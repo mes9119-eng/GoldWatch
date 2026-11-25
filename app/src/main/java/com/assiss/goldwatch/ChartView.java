@@ -18,7 +18,8 @@ import java.util.Locale;
 /** Simple touchable line chart, drawn left (old) to right (new). */
 public class ChartView extends View {
     private long[] t = new long[0];
-    private double[] v = new double[0];
+    private double[] v = new double[0];   // main line (sell, or world when no bank margin)
+    private double[] v2 = null;           // optional second line (buy)
     private boolean intraday;
     private int sel = -1;
     private String emptyText = "جاري التحميل...";
@@ -55,14 +56,20 @@ public class ChartView extends View {
     void setEmpty(String msg) {
         t = new long[0];
         v = new double[0];
+        v2 = null;
         sel = -1;
         emptyText = msg;
         invalidate();
     }
 
     void setData(long[] times, double[] values, boolean intraday) {
+        setData(times, values, null, intraday);
+    }
+
+    void setData(long[] times, double[] sell, double[] buy, boolean intraday) {
         this.t = times;
-        this.v = values;
+        this.v = sell;
+        this.v2 = buy;
         this.intraday = intraday;
         this.sel = -1;
         invalidate();
@@ -105,6 +112,10 @@ public class ChartView extends View {
         for (int i = 0; i < v.length; i++) {
             if (v[i] < min) { min = v[i]; iMin = i; }
             if (v[i] > max) { max = v[i]; iMax = i; }
+            if (v2 != null) {
+                if (v2[i] < min) min = v2[i];
+                if (v2[i] > max) max = v2[i];
+            }
         }
         double pad = (max - min) * 0.08;
         double realMin = min, realMax = max;
@@ -120,10 +131,20 @@ public class ChartView extends View {
         c.drawText("أعلى " + Updater.fmt(realMax), left(), yHi - 4 * dp, text);
         c.drawText("أقل " + Updater.fmt(realMin), left(), yLo + 13 * dp, text);
 
+        boolean two = v2 != null;
+        if (two) col = 0xFFFF8A80; // sell = coral
         Path p = new Path();
         for (int i = 0; i < v.length; i++) {
             float x = xAt(i), y = yAt(v[i]);
             if (i == 0) p.moveTo(x, y); else p.lineTo(x, y);
+        }
+        Path p2 = null;
+        if (two) {
+            p2 = new Path();
+            for (int i = 0; i < v2.length; i++) {
+                float x = xAt(i), y = yAt(v2[i]);
+                if (i == 0) p2.moveTo(x, y); else p2.lineTo(x, y);
+            }
         }
         Path f = new Path(p);
         f.lineTo(xAt(v.length - 1), bottom());
@@ -134,10 +155,14 @@ public class ChartView extends View {
         c.drawPath(f, fill);
         line.setColor(col);
         c.drawPath(p, line);
-
-        // end dot
         dot.setColor(col);
         c.drawCircle(xAt(v.length - 1), yAt(v[v.length - 1]), 3.5f * dp, dot);
+        if (two) {
+            line.setColor(0xFF80E0A0); // buy = green
+            c.drawPath(p2, line);
+            dot.setColor(0xFF80E0A0);
+            c.drawCircle(xAt(v2.length - 1), yAt(v2[v2.length - 1]), 3.5f * dp, dot);
+        }
 
         // x labels: first and last
         text.setTextAlign(Paint.Align.LEFT);
@@ -153,7 +178,14 @@ public class ChartView extends View {
             c.drawLine(x, top() - 4 * dp, x, bottom(), vl);
             dot.setColor(0xFFF1D77A);
             c.drawCircle(x, y, 5 * dp, dot);
-            String s = Updater.fmt(v[sel]) + "  •  " + fmtTime(t[sel]);
+            String s;
+            if (v2 != null) {
+                c.drawCircle(x, yAt(v2[sel]), 5 * dp, dot);
+                s = "بيع " + Updater.fmt(v[sel]) + "  •  شراء " + Updater.fmt(v2[sel])
+                        + "  •  " + fmtTime(t[sel]);
+            } else {
+                s = Updater.fmt(v[sel]) + "  •  " + fmtTime(t[sel]);
+            }
             float w = tip.measureText(s) + 16 * dp;
             float bx = Math.max(left(), Math.min(x - w / 2, right() - w));
             c.drawRoundRect(bx, 2 * dp, bx + w, 24 * dp, 8 * dp, 8 * dp, tipBg);

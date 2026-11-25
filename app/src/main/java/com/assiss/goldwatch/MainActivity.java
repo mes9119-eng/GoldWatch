@@ -244,21 +244,39 @@ public class MainActivity extends Activity {
             try {
                 ChartData.Series s = ChartData.load(getApplicationContext(), range, live);
                 final long[] t = s.t;
+                final android.content.Context ac = getApplicationContext();
+                final boolean bank = Store.margin(ac) > 0;
                 final double[] g = new double[s.size()];
-                for (int i = 0; i < g.length; i++) g[i] = Store.gram(getApplicationContext(), s.oz[i], k);
+                final double[] gb = bank ? new double[s.size()] : null;
+                for (int i = 0; i < g.length; i++) {
+                    if (bank) {
+                        g[i] = Store.bankSell(ac, s.oz[i], k);
+                        gb[i] = Store.bankBuy(ac, s.oz[i], k);
+                    } else {
+                        g[i] = PriceFetcher.gramSar(s.oz[i], k);
+                    }
+                }
                 h.post(() -> {
                     if (req != chartReq) return;
                     if (g.length < 2) {
                         chart.setEmpty("لا توجد بيانات كافية لهذه الفترة");
                         return;
                     }
-                    chart.setData(t, g, range == ChartData.DAY);
+                    chart.setData(t, g, gb, range == ChartData.DAY);
                     double diff = g[g.length - 1] - g[0];
                     double pct = diff / g[0] * 100;
                     String arrow = diff >= 0 ? "▲" : "▼";
-                    chartInfo.setText(arrow + " " + (diff >= 0 ? "+" : "") + Updater.fmt(diff) + " ريال  ("
-                            + (diff >= 0 ? "+" : "") + String.format(Locale.US, "%.2f", pct) + "%)  •  عيار " + k
-                            + "  •  " + Store.basisLabel(this));
+                    String sign = diff >= 0 ? "+" : "";
+                    String txt = arrow + " " + sign + String.format(Locale.US, "%.2f", pct) + "%  •  عيار " + k;
+                    if (gb != null) {
+                        double db = gb[gb.length - 1] - gb[0];
+                        txt += "\n● بيع: " + Updater.fmt(g[g.length - 1]) + "  (" + sign + Updater.fmt(diff) + ")"
+                                + "\n● شراء: " + Updater.fmt(gb[gb.length - 1]) + "  (" + (db >= 0 ? "+" : "")
+                                + Updater.fmt(db) + ")";
+                    } else {
+                        txt += "  •  " + sign + Updater.fmt(diff) + " ريال  •  السعر العالمي";
+                    }
+                    chartInfo.setText(txt);
                     chartInfo.setTextColor(diff >= 0 ? 0xFF4CD964 : 0xFFFF5A5F);
                 });
             } catch (Exception e) {

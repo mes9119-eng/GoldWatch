@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content" android:layout_marginTop="6dp"
                 android:textColor="@color/muted" android:textSize="13sp" />
             <TextView style="@style/Label" android:layout_marginTop="2dp" android:textSize="11sp"
-                android:text="اسحب إصبعك على الخط لعرض سعر أي نقطة" />
+                android:text="الخط الأحمر = سعر البيع للبنك • الأخضر = سعر الشراء من البنك. اسحب إصبعك على الرسم لعرض السعرين في أي نقطة." />
         </LinearLayout>
 
         <!-- alerts -->
