@@ -133,6 +133,46 @@
             <Button android:id="@+id/refresh" style="@style/GoldBtn" android:text="تحديث الآن" />
         </LinearLayout>
 
+        <!-- portfolio -->
+        <LinearLayout style="@style/Card">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="💰 مشترياتي" android:textColor="@color/text"
+                android:textSize="18sp" android:textStyle="bold" />
+            <TextView style="@style/Label" android:layout_marginTop="4dp" android:textSize="11sp"
+                android:text="ذهب عيار 24 — الربح محسوب على سعر البيع للبنك الحين" />
+
+            <LinearLayout android:id="@+id/pfSummary"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:orientation="vertical"
+                android:background="@drawable/input_bg" android:padding="14dp"
+                android:visibility="gone">
+                <TextView style="@style/Label" android:text="لو بعت الحين" android:textSize="12sp" />
+                <TextView android:id="@+id/pfProfit" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textSize="30sp" android:textStyle="bold"
+                    android:textColor="@color/gold_light" />
+                <TextView android:id="@+id/pfPct" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textSize="13sp" android:textStyle="bold" />
+                <TextView android:id="@+id/pfDetails" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginTop="10dp"
+                    android:textColor="@color/text" android:textSize="13sp" android:lineSpacingExtra="5dp" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/pfList"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" android:orientation="vertical" />
+
+            <TextView style="@style/Label" android:layout_marginTop="14dp" android:text="إضافة عملية شراء" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText android:id="@+id/pfGrams" style="@style/Input" android:layout_width="0dp"
+                    android:layout_weight="1" android:layout_marginEnd="6dp" android:hint="الجرامات" />
+                <EditText android:id="@+id/pfPrice" style="@style/Input" android:layout_width="0dp"
+                    android:layout_weight="1" android:layout_marginStart="6dp" android:hint="سعر الجرام" />
+            </LinearLayout>
+            <Button android:id="@+id/pfDate" style="@style/GhostBtn" android:text="📅 اليوم" />
+            <Button android:id="@+id/pfAdd" style="@style/GoldBtn" android:text="➕ إضافة" />
+        </LinearLayout>
+
         <!-- chart -->
         <LinearLayout style="@style/Card">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"

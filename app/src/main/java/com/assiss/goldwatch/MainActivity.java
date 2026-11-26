@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
     private TextView chartInfo;
     private int chartRange = ChartData.DAY;
     private int chartReq = 0;
+    private long pfDate = 0; // 0 = today
 
     @Override
     protected void onCreate(Bundle b) {
@@ -116,6 +117,36 @@ public class MainActivity extends Activity {
             loadChart();
             toast(m > 0 ? "تم الحفظ ✔" : "رجعنا للسعر العالمي");
         });
+        // ---- portfolio ----
+        final Button pfDateBtn = findViewById(R.id.pfDate);
+        pfDateBtn.setOnClickListener(v -> {
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            if (pfDate > 0) cal.setTimeInMillis(pfDate);
+            new android.app.DatePickerDialog(this, (dp, y, m, d) -> {
+                java.util.Calendar pick = java.util.Calendar.getInstance();
+                pick.set(y, m, d, 12, 0, 0);
+                pfDate = pick.getTimeInMillis();
+                pfDateBtn.setText("📅 " + String.format(Locale.US, "%02d/%02d/%d", d, m + 1, y));
+            }, cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH),
+                    cal.get(java.util.Calendar.DAY_OF_MONTH)).show();
+        });
+        findViewById(R.id.pfAdd).setOnClickListener(v -> {
+            EditText gIn = findViewById(R.id.pfGrams), pIn = findViewById(R.id.pfPrice);
+            double g = parse(gIn.getText().toString());
+            double p = parse(pIn.getText().toString());
+            if (g <= 0 || p <= 0) {
+                toast("اكتب الجرامات وسعر الجرام");
+                return;
+            }
+            Portfolio.add(this, pfDate > 0 ? pfDate : System.currentTimeMillis(), g, p);
+            gIn.setText("");
+            pIn.setText("");
+            pfDate = 0;
+            pfDateBtn.setText("📅 اليوم");
+            renderPortfolio();
+            toast("تمت الإضافة ✔");
+        });
+
         final TextView alphaValue = findViewById(R.id.alphaValue);
         final android.widget.SeekBar alphaBar = findViewById(R.id.alphaBar);
         // progress = transparency % (0 = opaque, 100 = fully transparent)
@@ -199,6 +230,7 @@ public class MainActivity extends Activity {
     }
 
     private void render() {
+        renderPortfolio();
         double oz = Store.oz(this);
         if (oz <= 0) return;
         int k = Store.karat(this);
@@ -231,6 +263,101 @@ public class MainActivity extends Activity {
         double m = Store.margin(this);
         String marginTxt = m <= 0 ? "" : "  •  هامش البنك " + Updater.fmt(m) + "%";
         time.setText("الأونصة " + String.format(Locale.US, "%.2f", oz) + "$  •  آخر تحديث " + t + marginTxt);
+    }
+
+    private static String money(double v) {
+        return String.format(Locale.US, "%,.2f", v);
+    }
+
+    private void renderPortfolio() {
+        java.util.List<Portfolio.Buy> list = Portfolio.all(this);
+        android.widget.LinearLayout box = findViewById(R.id.pfList);
+        box.removeAllViews();
+        View summary = findViewById(R.id.pfSummary);
+        if (list.isEmpty()) {
+            summary.setVisibility(View.GONE);
+            return;
+        }
+        double oz = Store.oz(this);
+        double sellNow = oz > 0 ? (Store.margin(this) > 0 ? Store.bankSell(this, oz, 24)
+                : PriceFetcher.gramSar(oz, 24)) : 0;
+        double grams = Portfolio.totalGrams(list);
+        double cost = Portfolio.totalCost(list);
+        double avg = cost / grams;
+
+        summary.setVisibility(View.VISIBLE);
+        TextView pr = findViewById(R.id.pfProfit), pc = findViewById(R.id.pfPct), dt = findViewById(R.id.pfDetails);
+        if (sellNow > 0) {
+            double value = grams * sellNow;
+            double pl = value - cost;
+            int col = pl >= 0 ? 0xFF4CD964 : 0xFFFF5A5F;
+            pr.setText((pl >= 0 ? "ربح +" : "خسارة ") + money(pl) + " ريال");
+            pr.setTextColor(col);
+            pc.setText((pl >= 0 ? "▲ +" : "▼ ") + String.format(Locale.US, "%.2f", pl / cost * 100) + "%");
+            pc.setTextColor(col);
+            dt.setText("الكمية: " + money(grams) + " جرام"
+                    + "\nمتوسط سعر شرائك: " + money(avg) + " ريال للجرام"
+                    + "\nإجمالي ما دفعت: " + money(cost) + " ريال"
+                    + "\nقيمتها لو بعت الحين: " + money(value) + " ريال"
+                    + "\nسعر البيع الحين: " + money(sellNow) + " ريال للجرام"
+                    + "\nتبدأ تربح إذا سعر البيع فوق: " + money(avg) + " ريال");
+        } else {
+            pr.setText("--");
+            pc.setText("");
+            dt.setText("حدّث السعر أولاً");
+        }
+
+        java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        for (int i = 0; i < list.size(); i++) {
+            final int idx = i;
+            Portfolio.Buy b = list.get(i);
+            android.widget.LinearLayout row = new android.widget.LinearLayout(this);
+            row.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+            row.setGravity(android.view.Gravity.CENTER_VERTICAL);
+            int pad = (int) (8 * getResources().getDisplayMetrics().density);
+            row.setPadding(0, pad, 0, pad);
+
+            TextView info = new TextView(this);
+            info.setLayoutParams(new android.widget.LinearLayout.LayoutParams(0,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+            info.setTextColor(0xFFF5F1E6);
+            info.setTextSize(13);
+            info.setText(f.format(new java.util.Date(b.date)) + "\n" + money(b.grams) + " جرام × "
+                    + money(b.price) + " = " + money(b.cost()) + " ريال");
+            row.addView(info);
+
+            if (sellNow > 0) {
+                double pl = b.grams * (sellNow - b.price);
+                TextView plv = new TextView(this);
+                plv.setTextSize(13);
+                plv.setTypeface(null, android.graphics.Typeface.BOLD);
+                plv.setText((pl >= 0 ? "+" : "") + money(pl));
+                plv.setTextColor(pl >= 0 ? 0xFF4CD964 : 0xFFFF5A5F);
+                plv.setPadding(pad, 0, pad, 0);
+                row.addView(plv);
+            }
+
+            TextView del = new TextView(this);
+            del.setText("✕");
+            del.setTextSize(16);
+            del.setTextColor(0xFF8C8676);
+            del.setPadding(pad, 0, pad, 0);
+            del.setOnClickListener(v -> new android.app.AlertDialog.Builder(this)
+                    .setMessage("حذف هذي العملية؟")
+                    .setPositiveButton("حذف", (d, w) -> {
+                        Portfolio.remove(this, idx);
+                        renderPortfolio();
+                    })
+                    .setNegativeButton("إلغاء", null)
+                    .show());
+            row.addView(del);
+
+            View line = new View(this);
+            line.setBackgroundColor(0x22D4AF37);
+            box.addView(row);
+            box.addView(line, new android.widget.LinearLayout.LayoutParams(
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT, 1));
+        }
     }
 
     private void loadChart() {
